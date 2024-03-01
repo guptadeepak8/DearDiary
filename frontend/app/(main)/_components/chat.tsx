@@ -4,23 +4,14 @@ import { useEffect, useState } from "react"
 import { ChatInput } from "./input"
 import { Message } from "./message"
 
-const data=[
-  { 
-    user:"hello",
-    bot:"hello who may i help you"
-  },
-  {
-    user:"hello",
-    bot:"hello who may i help you"
-  },
-  {
-    user:"hello",
-    bot:"hello who may i help you"
-  },
-]
+
 export const Chat=()=>{
-const [chats,setChat]=useState(data)
+const [chats,setChat]=useState<String[]>([])
 const [inputValue,setInputValue]=useState("")
+
+function handleClick(input: string){
+  setChat([...chats,input])
+}
 
   return(
     <div className="flex flex-col basis-1/2">
@@ -28,13 +19,13 @@ const [inputValue,setInputValue]=useState("")
         {
           chats.map((data,index)=>{
             return(
-               <Message key={index} bot={data.bot} user={data.user}/>
+               <Message key={index} inputValue={data}/>
             )
           })
         }
       </div>
       <div>
-        <ChatInput/>
+        <ChatInput setInputValue={setInputValue} inputValue={inputValue}  handleClick={handleClick}/>
       </div>
     </div>
   )
