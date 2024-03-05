@@ -1,32 +1,55 @@
+// Chat component
 "use client"
 
-import { useEffect, useState } from "react"
-import { ChatInput } from "./input"
-import { Message } from "./message"
+import { useEffect, useState } from "react";
+import { ChatInput } from "./input";
+import { Message } from "./message";
 
+export const Chat = () => {
+  const [chats, setChats] = useState<{ user: string; bot: string }[]>([]);
+  const [inputMessage, setInputMessage] = useState("");
 
-export const Chat=()=>{
-const [chats,setChat]=useState<String[]>([])
-const [inputValue,setInputValue]=useState("")
+  const fetchData = async (Usermessage: string) => {
+    try {
+      const res = await fetch('http://127.0.0.1:8000/get_question/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ Usermessage }),
+      });
 
-function handleClick(input: string){
-  setChat([...chats,input])
-}
+      if (res.ok) {
+        const { message } = await res.json();
+        setChats((prevChats) => [
+          ...prevChats,
+          { user:inputMessage , bot: message },
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  return(
+  const handleClick = async (message: string) => {
+      setInputMessage("");
+      await fetchData(inputMessage);
+  };
+
+  return (
     <div className="flex flex-col basis-1/2">
       <div className="bg-slate-200 h-[80vh]">
-        {
-          chats.map((data,index)=>{
-            return(
-               <Message key={index} inputValue={data}/>
-            )
-          })
-        }
+        {chats.map((data, index) => (
+          <Message key={index} inputValue={data.user} bot={data.bot} />
+        ))}
       </div>
       <div>
-        <ChatInput setInputValue={setInputValue} inputValue={inputValue}  handleClick={handleClick}/>
+        <ChatInput
+          setUser={setInputMessage}
+          user={inputMessage}
+          handleClick={handleClick}
+        />
       </div>
     </div>
-  )
-}
+  );
+};

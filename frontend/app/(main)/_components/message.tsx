@@ -3,25 +3,8 @@
 import { cn } from "@/lib/utils"
 import { useEffect, useState } from "react"
 
-export const Message=({inputValue}:any)=>{
+export const Message=({inputValue,bot}:any)=>{
 
-  const [bot,setBot]=useState("")
-
-  const fetchData=async()=>{
-    try {
-       const res=await fetch('')
-       if(res.ok){
-         const {message}=await res.json();
-         setBot(message)
-       }
-    } catch (error) {
-     
-    }  
-   }
-   
-   useEffect(()=>{
-    fetchData()
-   },[inputValue])
   
   return(
    <div className="flex flex-col ">
