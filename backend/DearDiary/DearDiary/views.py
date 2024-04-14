@@ -10,7 +10,7 @@ conversation_state = {}
 question_list = [
     "how was your morning?",
     "does something special or unique happened with you? ",
-    "how are you feeling at night?",
+    "how are you feelin at night?",
     "want to share anything?"
 ]
 chat = []
