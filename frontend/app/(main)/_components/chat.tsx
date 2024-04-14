@@ -10,37 +10,39 @@ export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("");
 
   const fetchData = async (Usermessage: string) => {
-    // try {
-    //   const res = await fetch('http://127.0.0.1:8000/get_question/', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ Usermessage }),
-    //   });
+    try {
+      const res = await fetch('http://127.0.0.1:8000/get_question/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ Usermessage }),
+      });
 
-    //   if (res.ok) {
-    //     const { message } = await res.json();
-    //     setChats((prevChats) => [
-    //       ...prevChats,
-    //       { user:inputMessage , bot: message },
-    //     ]);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
+      if (res.ok) {
+        const { message } = await res.json();
+        setChats((prevChats) => [
+          ...prevChats,
+          { user:inputMessage , bot: message },
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
-    setChats([
-      {user:"hii",bot:'heloo' },
-      {user:"how ",bot:'but how ' },
-      {user:"thats why",bot:'i ubdrstad yous' },
-      {user:"hii",bot:'heloo' },
-      {user:"how ",bot:'but how ' },
-      {user:"thats why",bot:'i ubdrstad yous' },
-      {user:"hii",bot:'heloo' },
-      {user:"how ",bot:'but how ' },
-      {user:"thats why",bot:'i ubdrstad yous' },
-    ])
+    
+    //for test
+    // setChats([
+    //   {user:"hii",bot:'heloo' },
+    //   {user:"how ",bot:'but how ' },
+    //   {user:"thats why",bot:'i ubdrstad yous' },
+    //   {user:"hii",bot:'heloo' },
+    //   {user:"how ",bot:'but how ' },
+    //   {user:"thats why",bot:'i ubdrstad yous' },
+    //   {user:"hii",bot:'heloo' },
+    //   {user:"how ",bot:'but how ' },
+    //   {user:"thats why",bot:'i ubdrstad yous' },
+    // ])
   };
 
   const handleClick = async (message: string) => {
