@@ -5,7 +5,7 @@ import { GeneratorTab } from "../../_components/genrator";
 
 export default function MainPage() {
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row h-full">
       <Chat />
       <GeneratorTab/>
     </div>
