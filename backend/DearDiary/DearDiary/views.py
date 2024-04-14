@@ -4,42 +4,135 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from . import bot
+from dotenv import load_dotenv
+from openai import OpenAI
+import os
 
+negative_words = ["not", "never", "none", "neither", "nowhere", "nobody", "nothing", "noway", "nay", "nay-sayer", "negative", "nix", "nixie", "naysay", "negatory", "negate", "refuse", "decline", "deny", "nope", "reject"]
+load_dotenv()
+apikey = os.getenv("apikey")
+client = OpenAI(api_key=apikey)
+cwd = os.getcwd()  # Get the current working directory (cwd)
+know_path = cwd + "\\DearDiary\\knowledge_base.json"
 conversation_state = {}
-
-question_list = [
-    "how was your morning?",
-    "does something special or unique happened with you? ",
-    "how are you feelin at night?",
-    "want to share anything?"
-]
+user = ""
 chat = []
+chatss = []
+questions = []
+temp = []
+
 
 @csrf_exempt
 def get_question(request):
+
     session_key = request.session.session_key
-    chatss = {}
     if session_key not in conversation_state:
-        conversation_state[session_key] = {'question_index': 0, 'responses': []}
+        conversation_state[session_key] = {'question_index': 0, 'responses': [],'result' : True}
 
     current_index = conversation_state[session_key]['question_index']
+    data = json.loads(request.body.decode('utf-8'))
+    user_message = data.get('Usermessage', '')
+    print(current_index)
+    pointer = current_index-1
 
-    if current_index < len(question_list):
-        if request.method == 'POST':
-            # Assuming the data is sent as JSON
-            data = json.loads(request.body.decode('utf-8'))
-            user_message = data.get('Usermessage', '')
-            chatss[question_list[current_index]] = user_message
-            chat.append(chatss)
-        current_question = question_list[current_index]
-        response_data = {'message': current_question}
-        conversation_state[session_key]['question_index'] += 1
-        updated_index = conversation_state[session_key]['question_index']
-        print(f"Updated question index: {updated_index}")
+    if 0 < len(user_message) <= 1:
+        pass
 
-        return JsonResponse(response_data)
     else:
-        return JsonResponse({'message': 'Thank-you for Answering the questions '})
+        if conversation_state[session_key]['result']:
+            if request.method == 'POST':
+                if current_index == 0:
+                    response = bot.chat_bot_greetings(user_message, know_path)
+                    response_data = {'message': response}
+                    conversation_state[session_key]['question_index'] += 1
+                    questions.append(response)
+                    return JsonResponse(response_data)
+
+                elif current_index == 1:
+                    chatss.append(user_message)
+                    intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                    print(intp)
+                    response = bot.chat_bot(intp, know_path,
+                                            'in 10 words create a response and ask are you ready to talk about it!')
+                    response_data = {'message': response}
+                    conversation_state[session_key]['question_index'] += 1
+                    questions.append(response)
+                    chat.append(intp)
+                    return JsonResponse(response_data)
+
+                elif current_index == 2:
+                    chatss.append(user_message)
+                    intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                    print(intp)
+                    response = bot.chat_bot(intp, know_path,
+                                            'in 10 words you are a chatbot that will ask user about their morning')
+                    response_data = {'message': response}
+                    conversation_state[session_key]['question_index'] += 1
+                    questions.append(response)
+                    chat.append(intp)
+                    return JsonResponse(response_data)
+
+                elif current_index == 3:
+                    chatss.append(user_message)
+                    intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                    print(intp)
+                    response = bot.chat_bot(intp, know_path,
+                                            'in 10 words you are a chatbot that will ask user about their afternoon')
+                    response_data = {'message': response}
+                    conversation_state[session_key]['question_index'] += 1
+                    questions.append(response)
+                    chat.append(intp)
+                    return JsonResponse(response_data)
+
+                elif current_index == 4:
+                    chatss.append(user_message)
+                    intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                    print(intp)
+                    response = bot.chat_bot(intp, know_path,
+                                            'in 10 words you are a chatbot that will ask user about their evening')
+                    response_data = {'message': response}
+                    conversation_state[session_key]['question_index'] += 1
+                    questions.append(response)
+                    chat.append(intp)
+                    return JsonResponse(response_data)
+
+                elif current_index == 5:
+                    chatss.append(user_message)
+                    intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                    print(intp)
+                    response = bot.chat_bot(intp, know_path,
+                                            'in 10 words you are a chatbot that ask user about their night')
+                    response_data = {'message': response}
+                    conversation_state[session_key]['question_index'] += 1
+                    questions.append(response)
+                    chat.append(intp)
+                    return JsonResponse(response_data)
+
+                else:
+                    chatss.append(user_message)
+                    intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                    print(intp)
+                    response = bot.chat_bot(intp, know_path,
+                                            'in 10 words you are a chatbot that will ask user does user want to share something else ')
+                    response_data = {'message': response + ' enter "Nope" to generate your diary entry'}
+                    conversation_state[session_key]['question_index'] += 1
+                    for i in negative_words:
+                        if user_message.lower() == i:
+                            conversation_state['result'] = False
+                    questions.append(response)
+                    chat.append(intp)
+                    return JsonResponse(response_data)
+        else:
+            chatss.append(user_message)
+            intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+            chat.append(intp)
+            print(chatss)
+            print(questions)
+            return JsonResponse(
+                {'message': 'Ok got it Thank-you for Answering the questions Tap generate to generate response'})
+
+
 
 @csrf_exempt
 def post_response(request):
@@ -65,50 +158,30 @@ def reset_conversation(request):
     session_key = request.session.session_key
 
     if session_key in conversation_state:
-        conversation_state[session_key] = {'question_index': 0, 'responses': []}
+        conversation_state[session_key] = {'question_index': 0, 'responses': [], 'result': True}
         return JsonResponse({'message': 'Conversation reset'})
     else:
         return JsonResponse({'error': 'Invalid session key'})
 
 
-
-user = "john"
-# Create your views here.
-"""apikey = "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"
-client = OpenAI(api_key=apikey)"""
-
-
-
 def get_records(prompt):
-    """result_string = '\n'.join(prompt)
+    ans = ''
+    for i in chat:
+        ans += i
+    return JsonResponse({"generateData": ans})
+    """result_string = '\n'.join(chat)
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo-0125",
         messages=[
             {"role": "system",
-             "content": "You are a personal diary assistant that will create a diary entry in 150 to 200 words"},
-            {"role": "user", "content": result_string}
+             "content": "You are a personal diary assistant that will create a diary entry in 200 words and title it in first line"},
+            {"role": "user", "content": "give a title and create diary data :" + result_string + "/n"}
         ]
     )
     generated_diary_entry = completion.choices[0].message.content
     diary_entry = str(generated_diary_entry)
-    return diary_entry"""
-    return "hahaha"
+    return JsonResponse({"generateData": diary_entry})"""
 
-
-def get_answers(questions):
-    answers = []
-    only_ans = []
-    for i, question in enumerate(questions):
-        ans = input(question + " ")
-        if ans == "no":
-            continue
-        rec = {
-            'Ques': question,
-            'ans': ans
-        }
-        answers.append(rec)
-        only_ans.append(ans)
-        return answers,only_ans
 
 
 def index(request):
