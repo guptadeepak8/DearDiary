@@ -1,0 +1,65 @@
+{
+  "intents": [
+    {
+      "name": "greetings",
+      "questions": [
+        {
+          "question": "hey",
+          "answer": "Hey there! How was your day?"
+        },
+        {
+          "question": "hello",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "hola",
+          "answer": "Hola! How was your day?"
+        },
+        {
+          "question": "hi",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "wake up",
+          "answer": "Good morning! How are you feeling today? How was your day so far?"
+        },
+        {
+          "question": "good morning",
+          "answer": "Good morning! How was your day so far?"
+        },
+        {
+          "question": "hello sir",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "hey there",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "sss",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "nope",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "konichiwa ",
+          "answer": "Konichiwa! How was your day?"
+        },
+        {
+          "question": "hiii",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "hhii",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "hii",
+          "answer": "Hello! How was your day?"
+        }
+      ]
+    }
+  ]
+}
