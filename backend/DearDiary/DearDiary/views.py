@@ -52,7 +52,7 @@ def get_question(request):
 
             elif current_index == 1:
                 chatss.append(user_message)
-                intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                intp = 'Bot: ' + questions[pointer] + 'user: ' + chatss[pointer] + '\n'
                 response = bot.chat_bot(intp, know_path,
                                         'in 10 words create a creative response and ask are you ready to talk about it!')
                 response_data = {'message': response}
@@ -63,7 +63,7 @@ def get_question(request):
 
             elif current_index == 2:
                 chatss.append(user_message)
-                intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                intp = 'Bot: ' + questions[pointer] + 'user: ' + chatss[pointer] + '\n'
                 response = bot.chat_bot(intp, know_path,
                                         'in 10 words create a creative response and ask user about their morning')
                 response_data = {'message': response}
@@ -74,7 +74,7 @@ def get_question(request):
 
             elif current_index == 3:
                 chatss.append(user_message)
-                intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                intp = 'Bot: ' + questions[pointer] + 'user: ' + chatss[pointer] + '\n'
                 response = bot.chat_bot(intp, know_path,
                                         'in 10 words create a creative response and ask user about their afternoon')
                 response_data = {'message': response}
@@ -85,7 +85,7 @@ def get_question(request):
 
             elif current_index == 4:
                 chatss.append(user_message)
-                intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                intp = 'Bot: ' + questions[pointer] + 'user: ' + chatss[pointer] + '\n'
                 response = bot.chat_bot(intp, know_path,
                                         'in 10 words create a creative response and ask user about their evening')
                 response_data = {'message': response}
@@ -96,7 +96,7 @@ def get_question(request):
 
             elif current_index == 5:
                 chatss.append(user_message)
-                intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                intp = 'Bot: ' + questions[pointer] + 'user: ' + chatss[pointer] + '\n'
                 response = bot.chat_bot(intp, know_path,
                                         'in 10 words create a creative response and ask user about their night')
                 response_data = {'message': response}
@@ -107,7 +107,7 @@ def get_question(request):
 
             else:
                 chatss.append(user_message)
-                intp = questions[pointer] + 'user: ' + chatss[pointer] + '\n'
+                intp = 'Bot: ' + questions[pointer] + 'user: ' + chatss[pointer] + '\n'
                 print(intp)
                 response = bot.chat_bot(intp, know_path,
                                         'in 10 words create a creative response and ask user if they want to share something else ')
@@ -153,28 +153,32 @@ def reset_conversation(request):
 
     if session_key in conversation_state:
         conversation_state[session_key] = {'question_index': 0, 'responses': [], 'result': True}
+        chat.clear()
         return JsonResponse({'message': 'Conversation reset'})
     else:
         return JsonResponse({'error': 'Invalid session key'})
 
 
 def get_records(prompt):
-    ans = ''
+    """ans = ''
     for i in chat:
         ans += i
-    return JsonResponse({"generateData": ans})
-    """result_string = '\n'.join(chat)
+    return JsonResponse({"generateData": ans})"""
+    result_string = '\n'.join(chat)
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo-0125",
         messages=[
             {"role": "system",
-             "content": "You are a personal diary assistant that will create a diary entry in 200 words and title it in first line"},
-            {"role": "user", "content": "give a title and create diary data :" + result_string + "/n"}
+             "content": "You are a personal diary that will create a diary entry in 200 words using the provided chats and 'title' it in first line"},
+            {"role": "user", "content": result_string}
         ]
+        
     )
     generated_diary_entry = completion.choices[0].message.content
     diary_entry = str(generated_diary_entry)
-    return JsonResponse({"generateData": diary_entry})"""
+    print(diary_entry)
+    
+    return JsonResponse({"generateData": diary_entry})
 
 
 def index(request):

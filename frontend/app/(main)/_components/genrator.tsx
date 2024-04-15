@@ -6,10 +6,24 @@ import { useState,useEffect } from "react"
 
 
 export const GeneratorTab=()=>{
-  const [text,setText]=useState("heeeelkdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddheeeelkdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddheeeelkdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddheeeelkddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+  const [text,setText]=useState("")
 
   const [displayText, setDisplayText] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch('http://127.0.0.1:8000/get_records/')
+      if (res.ok) {
+        const { generateData } = await res.json();
+        setText(generateData)
+        console.log(generateData);
+        
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     if (isGenerating) {
@@ -22,13 +36,14 @@ export const GeneratorTab=()=>{
           clearInterval(intervalId);
           setIsGenerating(false);
         }
-      }, 10); // Adjust the delay (in milliseconds) for the typewriter effect
+      }, 10);
       return () => clearInterval(intervalId);
     }
   }, [isGenerating, text]);
 
   const handleGenerate = () => {
     setIsGenerating(true);
+    fetchData();
   };
 
  return(
@@ -41,7 +56,7 @@ export const GeneratorTab=()=>{
     />
    </div>
    <div>
-    <Button variant="ghost"onClick={handleGenerate} disabled={isGenerating}>Genrate</Button>
+    <Button variant="ghost" onClick={handleGenerate} disabled={isGenerating}>Genrate</Button>
    </div>
   </div>
  )  

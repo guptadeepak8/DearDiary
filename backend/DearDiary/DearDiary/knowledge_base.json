@@ -46,6 +46,18 @@
         {
           "question": "konichiwa ",
           "answer": "Konichiwa! How was your day?"
+        },
+        {
+          "question": "hiii",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "hhii",
+          "answer": "Hello! How was your day?"
+        },
+        {
+          "question": "hii",
+          "answer": "Hello! How was your day?"
         }
       ]
     }
