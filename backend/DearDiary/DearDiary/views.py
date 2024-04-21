@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .models import collection
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -181,25 +180,7 @@ def get_records(prompt):
     return JsonResponse({"generateData": diary_entry})
 
 
-def index(request):
-    print(chat)
-    records = {
-        'user': user,
-        'chats': chat,
-    }
-    collection.insert_one(records)
-    return HttpResponse('<h1>app is running...</h1>')
 
 
-def add_person(request):
-    records = {
-        'first': 'john',
-        'last': 'smith'
-    }
-    collection.insert_one(records)
-    return HttpResponse('<h1>new person is added</h1>')
 
 
-def get_person(request):
-    person = collection.find()
-    return HttpResponse(person)
